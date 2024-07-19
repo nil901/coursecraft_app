@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "419307715089",
+    "firebase_url": "https://coursecraft-3b970-default-rtdb.firebaseio.com",
+    "project_id": "coursecraft-3b970",
+    "storage_bucket": "coursecraft-3b970.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419307715089:android:5850ce0601f7bb77efcfb0",
+        "android_client_info": {
+          "package_name": "com.example.coursecraft_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419307715089-1j97er7ju4olpu1ne2vd6e3bpueshis1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ1Ld2x_Vd0MArjFsL82Tl0-l54WRU_4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419307715089-1j97er7ju4olpu1ne2vd6e3bpueshis1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419307715089:android:78c64e1fc3274b27efcfb0",
+        "android_client_info": {
+          "package_name": "com.ninja.coursecraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419307715089-1j97er7ju4olpu1ne2vd6e3bpueshis1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ1Ld2x_Vd0MArjFsL82Tl0-l54WRU_4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419307715089-1j97er7ju4olpu1ne2vd6e3bpueshis1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
