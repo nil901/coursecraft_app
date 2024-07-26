@@ -63,8 +63,9 @@ class _CourcePaymentState extends State<CourcePayment> {
         "id": userId,
         "image": downloadUrl,
         "transactionId": trsactionCntroller.text,
-        "transactionId": 'false',
-        "userName": userName
+        "transactionStatus": 'false',
+        "userName": userName,
+        "CourseName": "Excel Course"
       });
       print("Upload successful: $downloadUrl");
         Utils().tostMessage("Upload successful. Please note that processing may take 2-3 hours.");
@@ -474,6 +475,7 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
             String? imageUrl = snapshot.data!['title'];
             String? transactionId = snapshot.data!['transactionId'];
             String? userName = snapshot.data!['userName'];
+             String? stutus = snapshot.data!['transactionStatus'];
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -483,7 +485,7 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
                   if (imageUrl != null) Image.network(imageUrl, height: 500),
                   SizedBox(height: 20),
                   if (transactionId != null)
-                    Text('Transaction ID: $transactionId',
+                    Text('Transaction ID: $stutus',
                         style: TextStyle(fontSize: 16)),
                   if (transactionId != null)
                     Text('user Name : $userName',

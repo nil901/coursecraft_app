@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:coursecraft_app/conts/prefskeys.dart';
 import 'package:coursecraft_app/screens/on%20boarding/splash_screen.dart';
+import 'package:coursecraft_app/screens/utils/prefs/app_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ Future<void> main() async {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light));
   WidgetsFlutterBinding.ensureInitialized();
+   await AppPreference().initialAppPreference();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
