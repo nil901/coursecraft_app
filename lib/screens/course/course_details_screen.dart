@@ -650,8 +650,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 ),
                                 onPressed: () {
                                   if (widget.access == true) {
+
                                     _togglePlayPause();
                                   } else {
+                                    print(widget.access);
                                     Utils().tostMessage(
                                         "Purchase course and access playlist");
                                   }

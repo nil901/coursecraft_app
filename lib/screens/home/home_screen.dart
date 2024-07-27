@@ -13,7 +13,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({this.folderPath = '/'});
@@ -97,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
   Future<Map<String, String?>> fetchtrsactionid() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -116,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // Get transaction ID and status
       String? imageUrl = data['title'];
-      String? transactionId = data['transactionId'];
+      transactionId = data['transactionId'];
       String? userName = data['userName'];
       String? transactionStatus =
           data['transactionStatus']; // Assuming this field exists
@@ -157,112 +160,115 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 9,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 15.w, left: 15.w,),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 20,),
-                        findyourbest(), 
+    return WillPopScope(
+      onWillPop: () => _oneButtonPressed(context),
+      child: Material(
+        color: Colors.transparent,
+        child: SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 15.w, left: 15.w,),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20,),
+                          findyourbest(), 
+                         
+                          // searchTextfield(),
+                          sizeBoxHeight(40),
+                          // continueyour(),
+                          // sizeBoxHeight(40),
+                          // topcategory(),
+                          // sizeBoxHeight(25),
+                          // topcategoryDetails(),
                        
-                        // searchTextfield(),
-                        sizeBoxHeight(40),
-                        // continueyour(),
-                        // sizeBoxHeight(40),
-                        // topcategory(),
-                        // sizeBoxHeight(25),
-                        // topcategoryDetails(),
-                     
-                        // topcourses(),
-                        // sizeBoxHeight(25),
-                        //           _isLoading
-                        // ? Center(child: CircularProgressIndicator())
-                        // : _error != null
-                        //     ? Center(child: Text('Error: $_error'))
-                        //     : _videos.isEmpty
-                        //         ? Center(child: Text('No videos found'))
-                        //         : ListView.builder(
-                        //           physics: NeverScrollableScrollPhysics(),
-                        //           shrinkWrap: true,
-                        //             itemCount: _videos.length,
-                        //             itemBuilder: (context, index) {
-                        //               final video = _videos[index];
-                                      // return  topcoursesDetails(
-                                      //       video['name'], video['url']
-                                      // );
-                        //             },
-                        //           ),
-        
-                        ListView(
-                          shrinkWrap: true,
-                          children: [
-                            // Conditionally render ListTile for folders excluding "pyment"
-                            if (_folders.isNotEmpty) ...[
-                              ..._folders.map((folder) =>topcoursesDetails(
-                                          folder.name, folder
-                                      ))
-                            ] else ...[
-                              // Center(child: Text('No folders found')),
+                          // topcourses(),
+                          // sizeBoxHeight(25),
+                          //           _isLoading
+                          // ? Center(child: CircularProgressIndicator())
+                          // : _error != null
+                          //     ? Center(child: Text('Error: $_error'))
+                          //     : _videos.isEmpty
+                          //         ? Center(child: Text('No videos found'))
+                          //         : ListView.builder(
+                          //           physics: NeverScrollableScrollPhysics(),
+                          //           shrinkWrap: true,
+                          //             itemCount: _videos.length,
+                          //             itemBuilder: (context, index) {
+                          //               final video = _videos[index];
+                                        // return  topcoursesDetails(
+                                        //       video['name'], video['url']
+                                        // );
+                          //             },
+                          //           ),
+          
+                          ListView(
+                            shrinkWrap: true,
+                            children: [
+                              // Conditionally render ListTile for folders excluding "pyment"
+                              if (_folders.isNotEmpty) ...[
+                                ..._folders.map((folder) =>topcoursesDetails(
+                                            folder.name, folder
+                                        ))
+                              ] else ...[
+                                // Center(child: Text('No folders found')),
+                              ],
+                              // Optionally display files
+                              ..._files.map((file) => ListTile(
+                                    leading: Icon(Icons.file_present),
+                                    title: Text(file.name),
+                                    //  subtitle: Text(_fileUrls[file.name] ?? 'Fetching URL...'),
+                                    onTap: () {
+                                      if (_fileUrls[file.name] != null) {
+                                        _playVideo(_fileUrls[file.name]!);
+                                      }
+                                    },
+                                  )),
                             ],
-                            // Optionally display files
-                            ..._files.map((file) => ListTile(
-                                  leading: Icon(Icons.file_present),
-                                  title: Text(file.name),
-                                  //  subtitle: Text(_fileUrls[file.name] ?? 'Fetching URL...'),
-                                  onTap: () {
-                                    if (_fileUrls[file.name] != null) {
-                                      _playVideo(_fileUrls[file.name]!);
-                                    }
-                                  },
-                                )),
-                          ],
-                        ),
-                        // FutureBuilder(
-                        //   future: _listVideos(),
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.connectionState ==
-                        //         ConnectionState.waiting) {
-                        //       return const Center(
-                        //           child: CircularProgressIndicator());
-                        //     }
-                        //     if (snapshot.hasError) {
-                        //       return Center(
-                        //           child: Text('Error: ${snapshot.error}'));
-                        //     }
-                        //     final List<Map<String, dynamic>> videos =
-                        //         snapshot.data as List<Map<String, dynamic>>;
-                        //     return ListView.builder(
-                        //       shrinkWrap: true,
-                        //       itemCount: videos.length,
-                        //       itemBuilder: (context, index) {
-                        //         final video = videos[index];
-                        //         return topcoursesDetails(
-                        //           video['name'],
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        // )
-                        SizedBox(
-                          height: 50,
-                        )
-                      ],
+                          ),
+                          // FutureBuilder(
+                          //   future: _listVideos(),
+                          //   builder: (context, snapshot) {
+                          //     if (snapshot.connectionState ==
+                          //         ConnectionState.waiting) {
+                          //       return const Center(
+                          //           child: CircularProgressIndicator());
+                          //     }
+                          //     if (snapshot.hasError) {
+                          //       return Center(
+                          //           child: Text('Error: ${snapshot.error}'));
+                          //     }
+                          //     final List<Map<String, dynamic>> videos =
+                          //         snapshot.data as List<Map<String, dynamic>>;
+                          //     return ListView.builder(
+                          //       shrinkWrap: true,
+                          //       itemCount: videos.length,
+                          //       itemBuilder: (context, index) {
+                          //         final video = videos[index];
+                          //         return topcoursesDetails(
+                          //           video['name'],
+                          //         );
+                          //       },
+                          //     );
+                          //   },
+                          // )
+                          SizedBox(
+                            height: 50,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(child: homeFrameImage())
-            ],
+                Expanded(child: homeFrameImage())
+              ],
+            ),
           ),
         ),
       ),
@@ -516,54 +522,58 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+bool? access;
 
-  String? access;
-  Future<Map<String, String?>> fetchImage() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      // Handle the case where there is no authenticated user
-      return {};
-    }
-
-    String userId = user.uid;
-    DatabaseReference ref =
-        FirebaseDatabase.instance.reference().child('users/$userId');
-    DatabaseEvent event = await ref.once();
-    DataSnapshot snapshot = event.snapshot;
-
-    if (snapshot.value != null) {
-      // Add a null check before accessing the key
-      final data = snapshot.value as Map<dynamic, dynamic>;
-      access = data['transactionStatus']; // Assuming this field exists
-
-      // Determine if the transaction is successful
-      bool isTransactionSuccessful = access == 'true'; // Adjust as needed
-
-      // Print transaction status
-      if (isTransactionSuccessful) {
-        print("Transaction is successful");
-      } else {
-        print("Transaction is not successful");
-      }
-
-      return {
-        'transactionStatus': access,
-      };
-    } else {
-      print("No data found for user");
-      return {};
-    }
+Future<Map<String, String?>> fetchImage() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    // Handle the case where there is no authenticated user
+    return {};
   }
+
+  String userId = user.uid;
+  DatabaseReference ref = FirebaseDatabase.instance.reference().child('users/$userId');
+  DatabaseEvent event = await ref.once();
+  DataSnapshot snapshot = event.snapshot;
+
+  if (snapshot.value != null) {
+    // Add a null check before accessing the key
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    access = data['transactionStatus']; // Assuming this field exists
+
+    // Determine if the transaction is successful
+    bool isTransactionSuccessful = access == 'true'; // Adjust as needed
+
+    // Print transaction status
+    if (isTransactionSuccessful) {
+      print("Transaction is successful");
+    } else {
+      print("Transaction is not successful");
+    }
+
+    return {
+      'transactionStatus': access.toString(),
+    };
+  } else {
+    print("No data found for user");
+    return {};
+  }
+}
 
   Widget topcoursesDetails(String title, url) {
     return GestureDetector(
       onTap: () {
         print("$url");
-        Navigator.pushReplacement(context, CupertinoPageRoute(
-          builder: (context) {
-            return CourseDetailsScreen(folderPath: url.fullPath);
-          },
-        ));
+       Navigator.pushReplacement(
+  context,
+  CupertinoPageRoute(
+    builder: (context) {
+      return CourseDetailsScreen(
+        folderPath: url.fullPath,
+        access: access, // Provide a default value if access is null
+      );
+    },
+  ));
         // Navigator.pushReplacement(context, CupertinoPageRoute(
         //       builder: (context) {
         //         return  CourcePayment(
@@ -667,8 +677,29 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
 
+}
+Future<bool> _oneButtonPressed(BuildContext context) async {
+    DateTime backPressedTime = DateTime.now();
+    final differene = DateTime.now().difference(backPressedTime);
+    backPressedTime = DateTime.now();
+
+    if (differene >= const Duration(seconds: 2)) {
+      Fluttertoast.showToast(
+        msg: "Click Again To Close The App",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 13.0,
+      );
+      return false;
+    } else {
+      SystemNavigator.pop(animated: true);
+      return true;
+    }
+  }
 Widget homeFrameImage() {
   return Image.asset(
     '${AppImages.homeImages}homeframe1.png',

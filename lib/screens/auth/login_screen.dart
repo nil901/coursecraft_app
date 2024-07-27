@@ -4,12 +4,15 @@ import 'package:coursecraft_app/core/app_color.dart';
 import 'package:coursecraft_app/core/app_image.dart';
 import 'package:coursecraft_app/core/app_sized_box.dart';
 import 'package:coursecraft_app/core/app_text.dart';
+import 'package:coursecraft_app/screens/auth/signup_screen.dart';
 import 'package:coursecraft_app/screens/home/home_screen.dart';
 import 'package:coursecraft_app/screens/widgets/custom_textfromfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,31 +75,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Form(
-        key: _formKey,
-        child: Scaffold(
-          body: Padding(
-            padding: EdgeInsets.only(right: 15.w, left: 15.w, top: 25.h),
-            child: Column(
-              children: [
-                getHelp(),
-                sizeBoxHeight(28),
-                helloBackText(),
-                sizeBoxHeight(39),
-                emailTextfiled(),
-                sizeBoxHeight(20),
-                passwordfiled(),
-                sizeBoxHeight(10),
-                forgotPasswordText(),
-                sizeBoxHeight(40),
-                signUpButton(),
-                sizeBoxHeight(24),
-                dontHave(),
-              ],
+    return WillPopScope(
+        onWillPop: () => _oneButtonPressed(context),
+      child: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Scaffold(
+            body: Padding(
+              padding: EdgeInsets.only(right: 15.w, left: 15.w, top: 25.h),
+              child: Column(
+                children: [
+                  getHelp(),
+                  sizeBoxHeight(28),
+                  helloBackText(),
+                  sizeBoxHeight(39),
+                  emailTextfiled(),
+                  sizeBoxHeight(20),
+                  passwordfiled(),
+                  sizeBoxHeight(10),
+                  forgotPasswordText(),
+                  sizeBoxHeight(40),
+                  signUpButton(),
+                  sizeBoxHeight(24),
+                  dontHave(),
+                ],
+              ),
             ),
+            bottomNavigationBar: homeButton(),
           ),
-          bottomNavigationBar: homeButton(),
         ),
       ),
     );
@@ -202,22 +208,33 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget dontHave() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AppText(
-          text: 'Don\'t have an account ?',
-          color: AppColor.blackcolor,
-          fontWeight: FontWeight.w400,
-          fontsize: 12.sp,
-        ),
-        AppText(
-          text: ' Sign Up',
-          color: AppColor.blackcolor,
-          fontWeight: FontWeight.w600,
-          fontsize: 12.sp,
-        ),
-      ],
+    return InkWell(
+      onTap:(){
+        Navigator.pushReplacement(context, CupertinoPageRoute(
+          builder: (context) {
+            return const SignUpScreen();
+          },
+        ));
+        },
+
+
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AppText(
+            text: 'Don\'t have an account ?',
+            color: AppColor.blackcolor,
+            fontWeight: FontWeight.w400,
+            fontsize: 12.sp,
+          ),
+          AppText(
+            text: ' Sign Up',
+            color: AppColor.blackcolor,
+            fontWeight: FontWeight.w600,
+            fontsize: 12.sp,
+          ),
+        ],
+      ),
     );
   }
 
@@ -289,6 +306,28 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       }
+    }
+  }
+
+  Future<bool> _oneButtonPressed(BuildContext context) async {
+    DateTime backPressedTime = DateTime.now();
+    final differene = DateTime.now().difference(backPressedTime);
+    backPressedTime = DateTime.now();
+
+    if (differene >= const Duration(seconds: 2)) {
+      Fluttertoast.showToast(
+        msg: "Click Again To Close The App",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 13.0,
+      );
+      return false;
+    } else {
+      SystemNavigator.pop(animated: true);
+      return true;
     }
   }
 }
